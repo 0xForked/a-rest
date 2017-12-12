@@ -9,13 +9,13 @@
 ### Config
     Import database
         |--- /database/asmith_rest.sql
-    Ganti setting database 
+    Ganti setting database
         |--- /bootsrap/app.php
 
 ### folder dan file yang perlu diketahui
     root |
          |---App |--/Controllers
-         |       |       |---/Controller.php   
+         |       |       |---/Controller.php
          |       |--/Middleware
          |       |       |---/Middleware.php
          |       |--/Models
@@ -46,7 +46,7 @@
          |-----.htaccess
 
     -semua dimulai dari index.php -> awal mula aplikasi di jalankan  $app->run();
-    -.htaccess 
+    -.htaccess
     -dilanjutkan ke bootsrap/app.php dari index.php selajutnya dari app.php ke routes.php dan ke semua class pada folder app
 
 ### Test Api
@@ -54,14 +54,14 @@
     untuk lebih lengapnya dapat dilihat pada file routes.php
 
     link test APIs data
-       1.                       base_url/example
+       1.                         base_url/example
        2. lihat semua data -      base_url/example/api/v1/datas
        3. lihat data perid -      base_url/example/api/v1/data/{id}
        4. tambah data -           base_url/example/api/v1/create/data
-            tambah data membutuhkan parameter "data" yang dapat 
+            tambah data membutuhkan parameter "data" yang dapat
             diinput menggunakan post man sebagai tool uji coba
        5. Update data -           base_url/example/api/v1/update/data
-            update data membutuhkan parameter "data" dan "id" yang dapat 
+            update data membutuhkan parameter "data" dan "id" yang dapat
             diinput menggunakan post man sebagai tool uji coba
        6. Delete data -           base_url/example/api/v1/delete/data/{id}
 

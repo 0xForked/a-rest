@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 12 Des 2017 pada 12.30
+-- Generation Time: 12 Des 2017 pada 23.58
 -- Versi Server: 10.1.26-MariaDB
 -- PHP Version: 7.1.9
 
@@ -21,6 +21,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `asmith_rest`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `groups`
+--
+
+CREATE TABLE `groups` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `groups`
+--
+
+INSERT INTO `groups` (`id`, `name`, `description`, `created_at`, `updated_at`) VALUES
+(1, 'Admin', 'is Admin Group', '2017-12-12 20:52:46', '2017-12-12 20:52:46'),
+(2, 'Member', 'is Member Group', '2017-12-12 20:52:46', '2017-12-12 20:52:46');
 
 -- --------------------------------------------------------
 
@@ -50,28 +72,54 @@ INSERT INTO `rest_crud` (`id`, `data`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `rest_user`
+-- Struktur dari tabel `users`
 --
 
-CREATE TABLE `rest_user` (
+CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(225) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(225) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `api_token` varchar(60) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `rest_user`
+-- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `rest_user` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(5, 'Agus Adhi Sumitro', 'mail@asmith.my.id', '$2y$10$OahV.jOAPq3MnwaGxt6p1eJOG7dEf5gMsDZI4xiLE82X48.W7GNd6', '2017-12-11 03:01:44', '2017-12-12 03:03:40');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `api_token`, `created_at`, `updated_at`) VALUES
+(6, 'Agus Adhi Sumitro', 'mail@asmith.my.id', '$2y$10$LJw0mX94rqnyQYe/dms5XO28bWogCD9VSfKwZ.Qtbo1qVjoHoXBPq', '296874decd18a6b3a517eeadfce5ba7c', '2017-12-12 14:09:01', '2017-12-12 15:38:35');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users_group`
+--
+
+CREATE TABLE `users_group` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `users_group`
+--
+
+INSERT INTO `users_group` (`id`, `user_id`, `group_id`) VALUES
+(1, 6, 1);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `groups`
+--
+ALTER TABLE `groups`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `rest_crud`
@@ -80,26 +128,58 @@ ALTER TABLE `rest_crud`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `rest_user`
+-- Indexes for table `users`
 --
-ALTER TABLE `rest_user`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `api_token` (`api_token`);
+
+--
+-- Indexes for table `users_group`
+--
+ALTER TABLE `users_group`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD UNIQUE KEY `group_id` (`group_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
+-- AUTO_INCREMENT for table `groups`
+--
+ALTER TABLE `groups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `rest_crud`
 --
 ALTER TABLE `rest_crud`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `rest_user`
+-- AUTO_INCREMENT for table `users`
 --
-ALTER TABLE `rest_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `users_group`
+--
+ALTER TABLE `users_group`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `users_group`
+--
+ALTER TABLE `users_group`
+  ADD CONSTRAINT `users_group_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `users_group_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

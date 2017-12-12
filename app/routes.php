@@ -28,13 +28,7 @@
     //Versi controllernya
     $app->get('/', 'DefaultController:index')->setName('home');
 
-    $app->post('/auth/singup', 'AuthController:postSingUp');
 
-    $app->post('/auth/singin', 'AuthController:postSingIn');
-
-    $app->post('/auth/password/change', 'AuthController:postChangePassword');
-
-    $app->get('/auth/singout', 'AuthController:getSingOut');
 /*
 |----------------------------------------------------
 | Bagian Apinya                                     |
@@ -52,3 +46,22 @@
         $app->post('/example/api/v1/delete/data/{id}', 'ExampleCrud:delete'); //delete by id
 
     //---------------------- Example APIs ------------------------------
+
+
+/*
+|----------------------------------------------------
+| User Authentication                               |
+|----------------------------------------------------
+| User Auth APIs
+| Version 1.0
+|
+*/
+    //Register
+    $app->post('/api/v1/auth/singup', 'AuthController:postSingUp');
+    //Login
+    $app->post('/api/v1/auth/singin', 'AuthController:postSingIn');
+    //Change Password
+    $app->post('/api/v1/auth/password/change', 'AuthController:postChangePassword');
+
+    //Test method Routes
+    $app->post('/api/test', 'AuthController:getApiKeyById');
