@@ -53,13 +53,26 @@
 
     untuk lebih lengapnya dapat dilihat pada file routes.php
 
-    link test APIs
-       1. base_url/example
-       2. lihat semua data base_url/example/api/v1/datas
-       3. lihat data perid base_url/example/api/v1/data/{id}
-       4. tambah data base_url/example/api/v1/create/data
+    link test APIs data
+       1.                       base_url/example
+       2. lihat semua data -      base_url/example/api/v1/datas
+       3. lihat data perid -      base_url/example/api/v1/data/{id}
+       4. tambah data -           base_url/example/api/v1/create/data
             tambah data membutuhkan parameter "data" yang dapat 
             diinput menggunakan post man sebagai tool uji coba
-       5. Update data base_url/example/api/v1/update/data
+       5. Update data -           base_url/example/api/v1/update/data
             update data membutuhkan parameter "data" dan "id" yang dapat 
             diinput menggunakan post man sebagai tool uji coba
+       6. Delete data -           base_url/example/api/v1/delete/data/{id}
+
+    link test APIs Auth (Singin & Singup)
+        1. singup -             baseu_url/auth/singup
+                membutuhkan parameter "nama", "emai", "password"
+        2. singin -             base_url/auth/singin
+                membutuhkan parameter "email", "password"
+        3. change password -    base_url/auth/password/change
+                membutuhkan parameter "old password" dan "new Password"
+
+    auth account default
+        1. email    :   mail@asmith.my.id
+        2. password :   password
