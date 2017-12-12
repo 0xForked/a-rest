@@ -1,0 +1,26 @@
+{% extends "layout/base.twig" %}
+{% block title %}404{% endblock %}
+{% block body_content %}
+
+    <div class="flex-center position-ref full-height">
+        <div class="content">
+            <div class="title m-b-md">
+                <div style="font-size:200px">
+                    404
+                </div>
+                <div style="font-size:30px">
+                     Page not found!
+                </div>
+            </div>
+
+
+            <div class="links">
+                <a href="{{ base_url() }}">back home</a>
+                <a href="docs.txt">Docs</a>
+                <a href="logs.txt">Logs</a>
+                <a href="https://asmith.my.id/contact" target="_blank">Contact me</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
