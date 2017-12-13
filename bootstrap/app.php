@@ -67,10 +67,16 @@
     //Container menghandle View dengan Twig
     $container['view'] = function ($container) {
         //Twig file Folder
-        $view = new \Slim\Views\Twig(__DIR__ . '/../resources/view/template/', [ 'cache' => false ]);
+        $view = new \Slim\Views\Twig(
+            __DIR__ . '/../resources/view/template/',
+            [ 'cache' => false ]
+        );
 
         // Instantiate and add Slim specific extension
-        $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
+        $basePath = rtrim(str_ireplace('index.php', '',
+            $container['request']->getUri()->getBasePath()), '/'
+        );
+
         $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 
         return $view;
@@ -108,6 +114,8 @@
 
     //Validation
     V::with('App\\Validation\\Rules\\');
+
+
 
 /*
 |----------------------------------------------------

@@ -41,14 +41,19 @@ class ExampleCrud extends Controller{
         ]);
 
         if($validation->failed()){
-            return $response->withJson(array('errors' => $_SESSION['errors']),400);
+            return $response->withJson(array(
+                'errors' => $_SESSION['errors']),400
+            );
         }
 
         CRUD::create([
             'data'          => $request->getParam('data'),
         ]);
 
-        return $response->withJson(array('status' => '200', 'message' => 'data berhasil ditambah'),200);
+        return $response->withJson(array(
+            'status' => '200',
+            'message' => 'data berhasil ditambah'
+        ),200);
 
     }
 
@@ -61,7 +66,9 @@ class ExampleCrud extends Controller{
         ]);
 
         if($validation->failed()){
-            return $response->withJson(array('errors' => $_SESSION['errors']),400);
+            return $response->withJson(array(
+                'errors' => $_SESSION['errors']
+            ),400);
         }
 
         $id = $request->getParam('id');
@@ -69,7 +76,10 @@ class ExampleCrud extends Controller{
 
         $data = CRUD::where('id', $id)->update(['data' => $data]);
 
-        return $response->withJson(array('status' => '200', 'message' => 'data dirubah'),200);
+        return $response->withJson(array(
+            'status' => '200',
+            'message' => 'data dirubah'
+        ),200);
 
     }
 
@@ -78,7 +88,10 @@ class ExampleCrud extends Controller{
 
         $id = $request->getAttribute('id');
         $data = CRUD::where('id', $id)->delete();
-        return $response->withJson(array('status' => '200', 'message' => 'data ' .$id. ' berhasil di hapus'),200);
+        return $response->withJson(array(
+            'status' => '200',
+            'message' => 'data ' .$id. ' berhasil di hapus'
+        ),200);
 
     }
 

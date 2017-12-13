@@ -11,7 +11,10 @@
 
                 $session = $_SESSION['errors'];
 
-                $this->container->view->getEnvironment()->addGlobal('errors',  $session);
+                $this->container->view
+                    ->getEnvironment()
+                    ->addGlobal('errors',  $session);
+
                 unset($_SESSION['errors']);
 
             }
