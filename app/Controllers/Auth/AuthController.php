@@ -36,13 +36,34 @@ class AuthController extends Controller {
             $api_token = $this->generateApiKey();
 
             //Store user data if validate !failed
-            UsersModel::create([
-                'name'          => $request->getParam('name'),
-                'email'         => $request->getParam('email'),
-                'password'      => password_hash($request->getParam('password'),
-                                    PASSWORD_BCRYPT, ['cost' => 10]),
-                'api_token'     => $api_token
-            ]);
+            $new_user = UsersModel::create([
+                            'name'          => $request->getParam('name'),
+                            'email'         => $request->getParam('email'),
+                            'password'      => password_hash($request->getParam('password'),
+                                                PASSWORD_BCRYPT, ['cost' => 10]),
+                            'api_token'     => $api_token
+                        ]);
+
+            //Create user group if success create new user
+            if($new_user){
+
+                //Default user group is 2 (member)
+                $default_group = 2;
+                //Get input email
+                $email = $request->getParam('email');
+
+                //cek user
+                $user = UsersModel::where('email', $email)->first();
+                //get user id
+                $user_id = $user->id;
+                //create defaul group for new user
+                UsersGroup::create([
+                    'user_id'          => $user_id,
+                    'group_id'         => $default_group,
+
+                ]);
+
+            }
 
             //Return respon message true if store user !failed
             return $response->withJson(array(
@@ -114,8 +135,11 @@ class AuthController extends Controller {
                 ['api_token' => $api_token]
             );
 
+            //Get user group
             $user_group = UsersGroup::where('user_id', $user->id)->first();
+            //Get group by user group
             $groups = GroupModel::where('id', $user_group->group_id)->first();
+            //Get user group name
             $user_group = $groups->name;
 
             //Return respon message true if user login !failed
