@@ -2,7 +2,7 @@
 
     namespace App\Validation\Rules;
     use Respect\Validation\Rules\AbstractRule;
-    use App\Models\UsersModel;
+    use App\Models\User\UsersModel;
 
     class MatchesPassword extends AbstractRule {
 
