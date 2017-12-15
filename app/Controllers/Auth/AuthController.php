@@ -4,6 +4,7 @@ namespace App\Controllers\Auth;
 use App\Controllers\Controller;
 use App\Models\User\UsersModel;
 use App\Models\User\UsersGroup;
+use App\Models\User\UsersDetail;
 use App\Models\User\GroupModel;
 use Respect\Validation\Validator as V;
 
@@ -22,6 +23,7 @@ class AuthController extends Controller {
                 'name'          => V::notEmpty()->alpha(),
                 'email'         => V::noWhiteSpace()->notEmpty()
                                     ->email()->emailAvailable(),
+                'phone'         => V::noWhiteSpace()->notEmpty(),
                 'password'      => V::noWhiteSpace()->notEmpty(),
             ]);
 
@@ -34,11 +36,18 @@ class AuthController extends Controller {
 
             // Generating API key
             $api_token = $this->generateApiKey();
+            //Get input email
+            $email = $request->getParam('email');
+            //Get name
+            $name = $request->getParam('name');
+            //Get phone
+            $phone = $request->getParam('phone');
+            //Default user group is 2 (member)
+             $default_group = 2;
 
             //Store user data if validate !failed
             $new_user = UsersModel::create([
-                            'name'          => $request->getParam('name'),
-                            'email'         => $request->getParam('email'),
+                            'email'         => $email,
                             'password'      => password_hash($request->getParam('password'),
                                                 PASSWORD_BCRYPT, ['cost' => 10]),
                             'api_token'     => $api_token
@@ -47,20 +56,20 @@ class AuthController extends Controller {
             //Create user group if success create new user
             if($new_user){
 
-                //Default user group is 2 (member)
-                $default_group = 2;
-                //Get input email
-                $email = $request->getParam('email');
-
                 //cek user
                 $user = UsersModel::where('email', $email)->first();
-                //get user id
-                $user_id = $user->id;
+
                 //create defaul group for new user
                 UsersGroup::create([
-                    'user_id'          => $user_id,
-                    'group_id'         => $default_group,
+                    'user_id'       => $user->id,
+                    'group_id'      => $default_group,
 
+                ]);
+                //create user detail
+                UsersDetail::create([
+                    'user_id'       => $user->id,
+                    'name'          => $name,
+                    'phone'         => $phone,
                 ]);
 
             }
@@ -110,15 +119,15 @@ class AuthController extends Controller {
         $user = UsersModel::where('email', $email)->first();
 
         //if user and user email failed to fetch
-        if (!$user){
-            if($user->email == null) {
-                //response false if !email
-                return $response->withJson(array(
-                    'status' => '400',
-                    'error' => true,
-                    'message' => 'Login gagal, Periksa kembali email anda',
-                ),400);
-            }
+        if (!$user && $user->email == null){
+
+            //response false if !email
+            return $response->withJson(array(
+                'status' => '400',
+                'error' => true,
+                'message' => 'Login gagal, Periksa kembali email anda',
+            ),400);
+
         }
 
         //decrypt password
@@ -131,29 +140,37 @@ class AuthController extends Controller {
             $api_token = $this->generateApiKey();
 
             //Update new token
-            UsersModel::where('email', $email)->update(
+            $tokens = UsersModel::where('email', $email)->update(
                 ['api_token' => $api_token]
             );
 
-            //Get user group
-            $user_group = UsersGroup::where('user_id', $user->id)->first();
-            //Get group by user group
-            $groups = GroupModel::where('id', $user_group->group_id)->first();
-            //Get user group name
-            $user_group = $groups->name;
+            if($tokens) {
+                //get new user token
+                $user_main = UsersModel::where('email', $email)->first();
+                 //Get user group
+                $user_group = UsersGroup::where('user_id', $user_main->id)->first();
+                //Get group by user group
+                $groups = GroupModel::where('id', $user_group->group_id)->first();
+                //get user detail
+                $user_detail = UsersDetail::where('user_id', $user_main->id)->first();
 
-            //Return respon message true if user login !failed
-            return $response->withJson(array(
-                'status' => '201',
-                'error' => false,
-                'message' => 'Berhasil Login',
-                'user_id' =>  $user->id,
-                'user' => [
-                    'user_name' => $user->name,
-                    'user_email' => $user->email,
-                    'user_group' => $user_group
-                ]
-            ),201);
+                 //Return respon message true if user login !failed
+                return $response->withJson(array(
+                    'status' => '201',
+                    'error' => false,
+                    'message' => 'Berhasil Login',
+                    'user_id' =>  $user->id,
+                    'user' => [
+                        'user_name'  => $user_detail->name,
+                        'user_phone' => $user_detail->phone,
+                        'user_email' => $user_main->email,
+                        'user_group' => $groups->name,
+                        'user_token' => $user_main->api_token
+
+                    ]
+                ),201);
+            }
+
 
         }
 
