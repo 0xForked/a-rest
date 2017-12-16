@@ -20,7 +20,8 @@ class AuthController extends Controller {
 
             //validate input
             $validation =  $this->validator->validate($request, [
-                'name'          => V::notEmpty()->alpha(),
+                'full_name'     => V::notEmpty()->alpha(),
+                'username'      => V::noWhiteSpace()->notEmpty(),
                 'email'         => V::noWhiteSpace()->notEmpty()
                                     ->email()->emailAvailable(),
                 'phone'         => V::noWhiteSpace()->notEmpty(),
@@ -38,19 +39,25 @@ class AuthController extends Controller {
             $api_token = $this->generateApiKey();
             //Get input email
             $email = $request->getParam('email');
+            //Get input email
+            $username = $request->getParam('username');
             //Get name
-            $name = $request->getParam('name');
+            $name = $request->getParam('full_name');
             //Get phone
             $phone = $request->getParam('phone');
             //Default user group is 2 (member)
-             $default_group = 2;
+            $default_group = 2;
+            //account status 1(active)
+            $account_status = 1;
 
             //Store user data if validate !failed
             $new_user = UsersModel::create([
                             'email'         => $email,
+                            'username'      => $username,
                             'password'      => password_hash($request->getParam('password'),
                                                 PASSWORD_BCRYPT, ['cost' => 10]),
-                            'api_token'     => $api_token
+                            'api_token'     => $api_token,
+                            'active'        => $account_status
                         ]);
 
             //Create user group if success create new user
@@ -68,7 +75,7 @@ class AuthController extends Controller {
                 //create user detail
                 UsersDetail::create([
                     'user_id'       => $user->id,
-                    'name'          => $name,
+                    'full_name'     => $name,
                     'phone'         => $phone,
                 ]);
 
@@ -160,8 +167,10 @@ class AuthController extends Controller {
                     'error' => false,
                     'message' => 'Berhasil Login',
                     'user_id' =>  $user->id,
+                    'isActive' => $user_main->active,
                     'user' => [
-                        'user_name'  => $user_detail->name,
+                        'user_full_name'  => $user_detail->full_name,
+                        'user_username'   => "@".$user_main->username,
                         'user_phone' => $user_detail->phone,
                         'user_email' => $user_main->email,
                         'user_group' => $groups->name,
@@ -227,7 +236,7 @@ class AuthController extends Controller {
 
         //cek database and get user
         $user = UsersModel::where('email', $email)
-                            ->select('name', 'email', 'api_token')
+                            ->select('username', 'email', 'api_token')
                             ->first();
 
         //if !user

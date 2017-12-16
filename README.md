@@ -6,6 +6,11 @@
 2. <a href="https://github.com/twigphp/Twig">Twig</a> - Template
 2. <a href="https://github.com/Respect/Validation">Validation</a> - Respect Validation
 
+<p align="center">
+  <img src="https://aasumitro.github.io/images/a-rest/resources/assets/images/test.png" width="250">
+</p>
+<br>
+
 ### Config
     Import database
         |--- /database/asmith_rest.sql
@@ -67,12 +72,15 @@
 
     link test APIs Auth (Singin & Singup)
         1. singup -             baseu_url/auth/singup
-                membutuhkan parameter "nama", "emai", "password"
+                membutuhkan parameter "full_name", "phone", "username", "emai", "password"
         2. singin -             base_url/auth/singin
                 membutuhkan parameter "email", "password"
         3. change password -    base_url/auth/password/change
                 membutuhkan parameter "old password" dan "new Password"
 
-    auth account default
+    auth account default admin
         1. email    :   mail@asmith.my.id
+        2. password :   password
+    auth account default member
+        1. email    :   sidia@asmith.my.id
         2. password :   password

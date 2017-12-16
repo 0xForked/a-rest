@@ -7,8 +7,10 @@ class UsersModel extends Model  {
     protected $table = 'users';
     protected $fillable = [
         'email',
+        'username',
         'password',
-        'api_token'
+        'api_token',
+        'active'
     ];
 
     public function setPassword($password){
