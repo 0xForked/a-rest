@@ -7,7 +7,7 @@
 2. <a href="https://github.com/Respect/Validation">Validation</a> - Respect Validation
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="500">
+  <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="900">
 </p>
 <br>
 
