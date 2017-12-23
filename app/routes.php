@@ -57,11 +57,20 @@
 |
 */
     //Register
-    $app->post('/api/v1/auth/singup', 'AuthController:postSingUp');
+    $app->post('/api/v1/auth/signup', 'AuthController:postSingUp');
     //Login
-    $app->post('/api/v1/auth/singin', 'AuthController:postSingIn');
+    $app->post('/api/v1/auth/signin', 'AuthController:postSingIn');
+    //Forgot Password
+    $app->post('/api/v1/auth/password/forgot', 'AuthController:postForgotPassword');
     //Change Password
     $app->post('/api/v1/auth/password/change', 'AuthController:postChangePassword');
+    //User detail
+    $app->post('/api/v1/user/detail', 'AuthController:postUserDetail');
 
-    //Test method Routes
+    //get user token by id
+    $app->get('/api/v1/user/token/{id}', 'AuthController:getTokenById');
+    //get validation token
+    $app->get('/api/v1/user/token/validation/{token}', 'AuthController:isValidToken');
+
+    //For Test new method
     $app->post('/api/test', 'AuthController:getApiKeyById');

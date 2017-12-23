@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 class UsersModel extends Model  {
     protected $table = 'users';
     protected $fillable = [
-        'email',
+        'active',
         'username',
+        'email',
         'password',
-        'api_token',
-        'active'
+        'api_token'
     ];
 
     public function setPassword($password){

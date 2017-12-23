@@ -85,7 +85,16 @@ class AuthController extends Controller {
             return $response->withJson(array(
                 'status' => '201',
                 'error' => false,
-                'message' => 'success'
+                'message' => 'success',
+                'user' => [
+                    'uid'       => $user->id,
+                    'token'     => $user->api_token,
+                    'name'      => $user_detail->full_name,
+                    'username'  => "@".$user_main->username,
+                    'phone'     => $user_detail->phone,
+                    'email'     => $user_main->email,
+                    'group'     => $groups->name,
+                ]
             ),201);
 
         }catch(\Exception $e){
@@ -130,9 +139,9 @@ class AuthController extends Controller {
 
             //response false if !email
             return $response->withJson(array(
-                'status' => '400',
+                'status' => 400,
                 'error' => true,
-                'message' => 'Login gagal, Periksa kembali email anda',
+                'message' => 'Login failed, Please cek your email address',
             ),400);
 
         }
@@ -163,19 +172,13 @@ class AuthController extends Controller {
 
                  //Return respon message true if user login !failed
                 return $response->withJson(array(
-                    'status' => '201',
-                    'error' => false,
-                    'message' => 'Berhasil Login',
-                    'user_id' =>  $user->id,
-                    'isActive' => $user_main->active,
+                    'status'   => 201,
+                    'error'    => false,
+                    'message'  => 'Berhasil Login',
                     'user' => [
-                        'user_full_name'  => $user_detail->full_name,
-                        'user_username'   => "@".$user_main->username,
-                        'user_phone' => $user_detail->phone,
-                        'user_email' => $user_main->email,
-                        'user_group' => $groups->name,
-                        'user_token' => $user_main->api_token
-
+                        'uid'       => $user->id,
+                        'isActive'  => $user_main->active,
+                        'token'     => $user_main->api_token,
                     ]
                 ),201);
             }
@@ -185,13 +188,12 @@ class AuthController extends Controller {
 
         //return false if !password
         return $response->withJson(array(
-            'status' => '400',
+            'status' => 400,
             'error' => true,
-            'message' => 'Login gagal, Periksa kembali password anda',
+            'message' => 'Login failed, Please cek your password',
         ),400);
 
     }
-
 
     /**
     * Change password user
@@ -199,10 +201,13 @@ class AuthController extends Controller {
     */
     public function postChangePassword($request, $response){
 
+        $uid = $request->getParam('uid');
+        $query = UsersModel::find($uid);
+
         //validate input
         $validation =  $this->validator->validate($request, [
             'password_old'      => V::noWhiteSpace()->notEmpty()
-                                    ->matchesPassword($this->user()->password),
+                                    ->matchesPassword($query->password),
             'password_new'      => V::noWhiteSpace()->notEmpty(),
         ]);
 
@@ -214,42 +219,66 @@ class AuthController extends Controller {
         }
 
         //access SetPassword function with passing new password
-        $this->user()->setPassword($request->getParam('password_new'));
+        $query->setPassword($request->getParam('password_new'));
 
         //Return respon message true password success changed
         return $response->withJson(array(
-            'status' => '201',
+            'status' => 201,
             'error' => false,
             'message' => 'change password success'
         ),201);
 
     }
 
+    public function postForgotPassword($request, $response){
+        //Do something :v
+    }
+
 
     /**
-    * Fetching user by email
+    * Fetching user by id and token
     * @param String $email User email id
     */
-    public function getUserByEmail($request, $response){
-        //get email input
-        $email = $request->getParam('email');
+    public function postUserDetail($request, $response){
+        //get token and uid
+        $uid = $request->getParam('uid');
+        $token = $request->getParam('token');
 
         //cek database and get user
-        $user = UsersModel::where('email', $email)
-                            ->select('username', 'email', 'api_token')
+        $user_main = UsersModel::where('id', $uid)
+                            ->where('api_token', $token)
                             ->first();
 
         //if !user
-        if (isset($user)) {
-            //response error true
-            return $response->withJson($user);
+        if (isset($user_main)) {
+
+            $user_detail = UsersDetail::where('user_id', $user_main->id)->first();
+            $user_group = UsersGroup::where('user_id', $user_main->id)->first();
+            $groups = GroupModel::where('id', $user_group->group_id)->first();
+
+            //Return respon message true if user login !failed
+            return $response->withJson(array(
+                'status'   => 201,
+                'error'    => false,
+                'message'  => 'Success',
+                'user' => [
+                    'uid'       => $user_main->id,
+                    'name'      => $user_detail->full_name,
+                    'username'  => "@".$user_main->username,
+                    'phone'     => $user_detail->phone,
+                    'email'     => $user_main->email,
+                    'group'     => $groups->name,
+
+                ]
+            ),201);
+
         } else {
 
             //Return respon message false if store user failed
             return $response->withJson(array(
                 'status' => '401',
                 'error' => true,
-                'message' => 'Tidak dapat mengambil data user'
+                'message' => 'Cannot retrieve user data'
             ),401);
 
         }
@@ -260,9 +289,9 @@ class AuthController extends Controller {
     * Fetching user api key
     * @param String $user_id user id primary key in user table
     */
-    public function getApiKeyById($request, $response) {
+    public function getTokenById($request, $response) {
         //get user input
-        $user_id = $request->getParam('id');
+        $user_id = $request->getAttribute('id');
 
         //cek dataase and get api token
         $user = UsersModel::where('id', $user_id)
@@ -273,7 +302,12 @@ class AuthController extends Controller {
         if (isset($user)) {
 
             //give response message error false
-            return $response->withJson($user);
+            return $response->withJson(array(
+                'status' => '201',
+                'error' => false,
+                'message' => 'Success',
+                'token' => $user->api_token
+            ),201);
 
         } else {
 
@@ -281,44 +315,11 @@ class AuthController extends Controller {
             return $response->withJson(array(
                 'status' => '401',
                 'error' => true,
-                'message' => 'Tidak dapat mengambil data user'
+                'message' => 'Cannot retrieve user Token'
             ),401);
 
         }
     }
-
-
-    /**
-    * Fetching user id by api key
-    * @param String $api_key user api key
-    */
-    public function getUserId($request, $response) {
-        //get api key input
-        $api_key = $request->getParam('api_token');
-
-        //get id from db
-        $user = UsersModel::where('api_token', $api_key)
-                            ->select('id')
-                            ->first();
-
-        //cek if !user
-        if (isset($user)) {
-
-            //give response message error false
-            return $response->withJson($user);
-
-        } else {
-
-            //give response message error true
-            return $response->withJson(array(
-                'status' => '401',
-                'error' => true,
-                'message' => 'Tidak dapat mengambil data user'
-            ),401);
-
-        }
-    }
-
 
     /**
     * Validating user api key
@@ -326,12 +327,12 @@ class AuthController extends Controller {
     * @param String $api_key user api key
     * @return boolean
     */
-    public function isValidApiKey($request, $response) {
+    public function isValidToken($request, $response) {
         //get input
-        $api_key = $request->getParam('api_token');
+        $token = $request->getAttribute('token');
 
         //cek validation api token
-        $user = UsersModel::where('api_token', $api_key)
+        $user = UsersModel::where('api_token', $token)
                             ->select('id')
                             ->first();
 
@@ -340,7 +341,8 @@ class AuthController extends Controller {
             return $response->withJson(array(
                 'status' => '201',
                 'error' => false,
-                'message' => 'API Token isValid'
+                'message' => 'API Token is Valid',
+                'uid' => $user->id
             ),201);
 
         } else {
@@ -348,7 +350,7 @@ class AuthController extends Controller {
             return $response->withJson(array(
                 'status' => '401',
                 'error' => true,
-                'message' => 'API Token inValid'
+                'message' => 'API Token invalid'
             ),401);
 
         }
@@ -363,14 +365,5 @@ class AuthController extends Controller {
 
     }
 
-    public function user(){
-
-        if (isset($_SESSION['user_id'])){
-
-            return UsersModel::find($_SESSION['user_id']);
-
-        }
-
-    }
 
 }
