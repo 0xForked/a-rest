@@ -1,7 +1,7 @@
 <?php
 
     use Respect\Validation\Validator as V;
-
+    use PHPMailer\PHPMailer\PHPMailer;
     //Start session
     session_start();
 
@@ -95,6 +95,36 @@
         return new \App\Validation\Validator($container);
     };
 
+    //Container untuk mailer masi sementara proses belum jadi sementara pake sendMail di  Auth Controller
+    $container['mailer'] = function ($container) {
+        $mailer = new PHPMailer();
+
+        $mailer->SMTPDebug = 3;
+
+        $mailer->isSMTP();
+
+        $mailer->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        //$mailer->Host = 'tsl://smtp.gmail.com:587';
+        $mailer->Host = 'ssl://smtp.gmail.com:465';
+
+        $mailer->SMTPAuth = true;
+        $mailer->Username = 'your-email@gmail.com';
+        $mailer->Password = 'your-email-password';
+
+        $mailer->setFrom('fookipokemail@asmith.my.id', 'FookiPoke Studio');
+
+        $mailer->isHtml(true);
+
+        return new \App\Mail\Mailer($container->view, $mailer);
+
+    };
 
     //Controller
     $container['DefaultController'] = function ($container) {

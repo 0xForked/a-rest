@@ -61,9 +61,9 @@
     //Login
     $app->post('/api/v1/auth/signin', 'AuthController:postSingIn');
     //Forgot Password
-    $app->post('/api/v1/auth/password/forgot', 'AuthController:postForgotPassword');
+    $app->post('/api/v1/user/password/forgot', 'AuthController:postForgotPassword');
     //Change Password
-    $app->post('/api/v1/auth/password/change', 'AuthController:postChangePassword');
+    $app->post('/api/v1/user/password/change', 'AuthController:postChangePassword');
     //User detail
     $app->post('/api/v1/user/detail', 'AuthController:postUserDetail');
 

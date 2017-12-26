@@ -7,6 +7,7 @@ use App\Models\User\UsersGroup;
 use App\Models\User\UsersDetail;
 use App\Models\User\GroupModel;
 use Respect\Validation\Validator as V;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class AuthController extends Controller {
 
@@ -36,7 +37,7 @@ class AuthController extends Controller {
             }
 
             // Generating API key
-            $api_token = $this->generateApiKey();
+            $api_token = $this->generateKey();
             //Get input email
             $email = $request->getParam('email');
             //Get input email
@@ -79,6 +80,13 @@ class AuthController extends Controller {
                     'phone'         => $phone,
                 ]);
 
+                 //Get user group
+                 $user_group = UsersGroup::where('user_id', $user->id)->first();
+                 //Get group by user group
+                 $groups = GroupModel::where('id', $user_group->group_id)->first();
+                 //get user detail
+                 $user_detail = UsersDetail::where('user_id', $user->id)->first();
+
             }
 
             //Return respon message true if store user !failed
@@ -90,9 +98,9 @@ class AuthController extends Controller {
                     'uid'       => $user->id,
                     'token'     => $user->api_token,
                     'name'      => $user_detail->full_name,
-                    'username'  => "@".$user_main->username,
+                    'username'  => "@".$user->username,
                     'phone'     => $user_detail->phone,
-                    'email'     => $user_main->email,
+                    'email'     => $user->email,
                     'group'     => $groups->name,
                 ]
             ),201);
@@ -153,7 +161,7 @@ class AuthController extends Controller {
             $_SESSION['user_id'] = $user->id;
 
              // Generating new API key
-            $api_token = $this->generateApiKey();
+            $api_token = $this->generateKey();
 
             //Update new token
             $tokens = UsersModel::where('email', $email)->update(
@@ -163,18 +171,12 @@ class AuthController extends Controller {
             if($tokens) {
                 //get new user token
                 $user_main = UsersModel::where('email', $email)->first();
-                 //Get user group
-                $user_group = UsersGroup::where('user_id', $user_main->id)->first();
-                //Get group by user group
-                $groups = GroupModel::where('id', $user_group->group_id)->first();
-                //get user detail
-                $user_detail = UsersDetail::where('user_id', $user_main->id)->first();
 
-                 //Return respon message true if user login !failed
+                //Return respon message true if user login !failed
                 return $response->withJson(array(
                     'status'   => 201,
                     'error'    => false,
-                    'message'  => 'Berhasil Login',
+                    'message'  => 'Login Success',
                     'user' => [
                         'uid'       => $user->id,
                         'isActive'  => $user_main->active,
@@ -231,7 +233,52 @@ class AuthController extends Controller {
     }
 
     public function postForgotPassword($request, $response){
-        //Do something :v
+        $email = $request->getParam('email');
+        $query = UsersModel::find($email);
+
+         //validate input
+         $validation =  $this->validator->validate($request, [
+            'email'   => V::noWhiteSpace()->notEmpty()->email(),
+        ]);
+
+        //cek validation
+        if($validation->failed()){
+            return $response->withJson(array(
+                'errors' => $_SESSION['errors']
+            ),401);
+        }
+
+         //Update new code
+        $forgot = UsersModel::where('email', $email)->update([
+            'forgotten_password_code' => $this->generateKey(),
+            'forgotten_password_time' => 1514263510
+        ]);
+
+
+        if($forgot) {
+            //get new user token
+            $user_main = UsersModel::where('email', $email)->first();
+
+            //test function on the last file
+            //$this->sendMail($user_main->email, $user_main->name, $subject, $body);
+
+            //masih sementara proses belum jadi
+            $this->mailer->send('email.twig', ['user' => $user_main], function($message) use ($user_main){
+
+                $link = "http://your-domain/project/a-dash/reset/".$user_main->forgotten_password_code;
+                $subject = "Asmith Api - Forgot password ";
+                $body = "To change your password please click this link below<a href=".$link.">
+                Forgot password link</a>";
+
+                $message->to($user_main->email);
+                $message->subject($subject);
+                $message->body($body);
+
+            });
+
+        }
+
+
     }
 
 
@@ -263,6 +310,7 @@ class AuthController extends Controller {
                 'message'  => 'Success',
                 'user' => [
                     'uid'       => $user_main->id,
+                    'token'     => $user_main->api_token,
                     'name'      => $user_detail->full_name,
                     'username'  => "@".$user_main->username,
                     'phone'     => $user_detail->phone,
@@ -359,7 +407,7 @@ class AuthController extends Controller {
 //===================================== fungsi penunjang =========================
 
     //Generate random md5 api token
-    private function generateApiKey() {
+    private function generateKey() {
         //return unique md5 random key
         return md5(uniqid(rand(), true));
 

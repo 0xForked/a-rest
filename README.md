@@ -4,7 +4,8 @@
 
 1. <a href="https://github.com/illuminate/database">Eloquent</a> - ORM DB
 2. <a href="https://github.com/twigphp/Twig">Twig</a> - Template
-2. <a href="https://github.com/Respect/Validation">Validation</a> - Respect Validation
+3. <a href="https://github.com/Respect/Validation">Validation</a> - Respect Validation
+4. <a href="https://github.com/PHPMailer/PHPMailer">PHPMailer</a> - Send Mail
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="900">
@@ -17,10 +18,17 @@
     Ganti setting database
         |--- /bootsrap/app.php
 
+    email config
+    buka bootsrap/app.php dan rubah username dan password dengan milik anda
+    untuk membuat body secara kostum anda bisa menghapus atau menjadikan koment pada body default
+    line 270 AuthController dan mengedit pada folder resources/view/email.twig
+
 ### folder dan file yang perlu diketahui
     root |
          |---App |--/Controllers
          |       |       |---/Controller.php
+         |       |--/Mail
+         |       |       |---/Mailer.php
          |       |--/Middleware
          |       |       |---/Middleware.php
          |       |--/Models
@@ -40,6 +48,7 @@
          |      |---illuminate
          |      |---nesbot
          |      |---nikic
+         |      |---phpmailer
          |      |---pimple
          |      |---psr
          |      |---respect
@@ -77,6 +86,8 @@
                 membutuhkan parameter "email", "password"
         3. change password -    base_url/auth/password/change
                 membutuhkan parameter "old password" dan "new Password"
+        4. reset password - base_url/auth/password/reset
+                membutuhkan parameter "email" kemudian akan mendapatkan link reset pada email
 
     auth account default admin
         1. email    :   mail@asmith.my.id
