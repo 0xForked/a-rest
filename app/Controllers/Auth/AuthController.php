@@ -276,8 +276,21 @@ class AuthController extends Controller {
 
             });
 
-        }
+            //
+            return $response->withJson(array(
+                'status' => 201,
+                'error' => false,
+                'message' => 'Success send email',
+            ),400);
 
+        } else {
+            //return false if !password
+            return $response->withJson(array(
+                'status' => 400,
+                'error' => true,
+                'message' => 'Failed send a email, your email is not in our databases',
+            ),400);
+        }
 
     }
 
