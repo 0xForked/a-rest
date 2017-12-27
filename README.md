@@ -95,3 +95,6 @@
     auth account default member
         1. email    :   sidia@asmith.my.id
         2. password :   password
+
+contoh pengimplementasian : 
+- a-droid (android app with a-rest as a web service) https://github.com/aasumitro/a-droid
