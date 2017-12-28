@@ -18,16 +18,16 @@
     Ganti setting database
         |--- /bootsrap/app.php
 
-    email config
-    buka bootsrap/app.php dan rubah username dan password dengan milik anda
-    untuk membuat body secara kostum anda bisa menghapus atau menjadikan koment pada body default
-    line 270 AuthController dan mengedit pada folder resources/view/email.twig
+    Email config
+    Go to booting/app.php and change username and password as yours.
+    if your want to make a custom body you can delete or comment on line 270,
+    in AuthController and your cant put your custom body email in folder resources/view/email.twig
 
 ### folder dan file yang perlu diketahui
     root |
          |---App |--/Controllers
          |       |       |---/Controller.php
-         |       |--/Mail
+         |       |--/Mailer
          |       |       |---/Mailer.php
          |       |--/Middleware
          |       |       |---/Middleware.php
@@ -38,7 +38,7 @@
          |       |
          |       |-------routes.php
          |
-         |---Bootsrap
+         |---Booting
          |      |---app.php
          |
          |---Vendor
@@ -59,35 +59,31 @@
          |-----index.php
          |-----.htaccess
 
-    -semua dimulai dari index.php -> awal mula aplikasi di jalankan  $app->run();
-    -.htaccess
-    -dilanjutkan ke bootsrap/app.php dari index.php selajutnya dari app.php ke routes.php dan ke semua class pada folder app
 
 ### Test Api
 
-    untuk lebih lengapnya dapat dilihat pada file routes.php
+    Your can see on routes.php for more links or api links
 
     link test APIs data
        1.                         base_url/example
-       2. lihat semua data -      base_url/example/api/v1/datas
-       3. lihat data perid -      base_url/example/api/v1/data/{id}
-       4. tambah data -           base_url/example/api/v1/create/data
-            tambah data membutuhkan parameter "data" yang dapat
+       2. all data   -      base_url/example/api/v1/datas
+       3. data with id -      base_url/example/api/v1/data/{id}
+       4. add data -           base_url/example/api/v1/create/data
+            you need name or other of "data" as a parameter
             diinput menggunakan post man sebagai tool uji coba
        5. Update data -           base_url/example/api/v1/update/data
-            update data membutuhkan parameter "data" dan "id" yang dapat
-            diinput menggunakan post man sebagai tool uji coba
+            update data you need "data" and "id" as a parameter
        6. Delete data -           base_url/example/api/v1/delete/data/{id}
 
     link test APIs Auth (Singin & Singup)
         1. singup -             baseu_url/auth/singup
-                membutuhkan parameter "full_name", "phone", "username", "emai", "password"
+                need  "full_name", "phone", "username", "emai", "password" as a parameter
         2. singin -             base_url/auth/singin
-                membutuhkan parameter "email", "password"
+                need "email", "password" as a parameter
         3. change password -    base_url/auth/password/change
-                membutuhkan parameter "old password" dan "new Password"
+                need "old password" dan "new Password" as a parameter
         4. reset password - base_url/auth/password/reset
-                membutuhkan parameter "email" kemudian akan mendapatkan link reset pada email
+                nedd  "email" as a parameter and then you will get an email to change your password
 
     auth account default admin
         1. email    :   mail@asmith.my.id
@@ -96,5 +92,5 @@
         1. email    :   sidia@asmith.my.id
         2. password :   password
 
-contoh pengimplementasian : 
+example implementation on android app : 
 - a-droid (android app with a-rest as a web service) https://github.com/aasumitro/a-droid
