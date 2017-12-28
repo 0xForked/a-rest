@@ -4,8 +4,8 @@
 
 1. <a href="https://github.com/illuminate/database">Eloquent</a> - ORM DB
 2. <a href="https://github.com/twigphp/Twig">Twig</a> - Template
-3. <a href="https://github.com/Respect/Validation">Validation</a> - Respect Validation
-4. <a href="https://github.com/PHPMailer/PHPMailer">PHPMailer</a> - Send Mail
+3. <a href="https://github.com/Respect/Validation">Respect Validation</a> - Validation
+4. <a href="https://github.com/PHPMailer/PHPMailer">PHPMailer</a> - Mailler
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="900">
@@ -15,7 +15,7 @@
 ### Config
     Import database
         |--- /database/asmith_rest.sql
-    Ganti setting database
+    Database setting
         |--- /bootsrap/app.php
 
     Email config
@@ -23,7 +23,7 @@
     if your want to make a custom body you can delete or comment on line 270,
     in AuthController and your cant put your custom body email in folder resources/view/email.twig
 
-### folder dan file yang perlu diketahui
+### folder dan fil
     root |
          |---App |--/Controllers
          |       |       |---/Controller.php
