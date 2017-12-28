@@ -16,14 +16,14 @@
     Import database
         |--- /database/asmith_rest.sql
     Database setting
-        |--- /bootsrap/app.php
+        |--- /booting/app.php
 
     Email config
     Go to booting/app.php and change username and password as yours.
     if your want to make a custom body you can delete or comment on line 270,
     in AuthController and your cant put your custom body email in folder resources/view/email.twig
 
-### folder dan fil
+### folder dan file
     root |
          |---App |--/Controllers
          |       |       |---/Controller.php
@@ -70,7 +70,6 @@
        3. data with id -      base_url/example/api/v1/data/{id}
        4. add data -           base_url/example/api/v1/create/data
             you need name or other of "data" as a parameter
-            diinput menggunakan post man sebagai tool uji coba
        5. Update data -           base_url/example/api/v1/update/data
             update data you need "data" and "id" as a parameter
        6. Delete data -           base_url/example/api/v1/delete/data/{id}
