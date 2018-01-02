@@ -92,5 +92,5 @@
         2. password :   password
 
 example implementation on android app : 
-- a-droid (android app with a-rest as a web service) https://github.com/aasumitro/a-droid
+- a-droid (android app with a-rest as a web service) base version https://github.com/aasumitro/a-droid
 - a-droid clean version https://github.com/aasumitro/a-droid-cc
