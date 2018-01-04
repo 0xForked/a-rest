@@ -7,13 +7,12 @@ use App\Models\User\UsersGroup;
 use App\Models\User\UsersDetail;
 use App\Models\User\GroupModel;
 use Respect\Validation\Validator as V;
-use PHPMailer\PHPMailer\PHPMailer;
 
 class AuthController extends Controller {
 
     /**
     * Register new user
-    * @param String
+    * @param String username, name, email, phone, password
     */
     public function postSingUp($request, $response){
 
@@ -33,18 +32,18 @@ class AuthController extends Controller {
             if($validation->failed()){
                 return $response->withJson(array(
                         'errors' => $_SESSION['errors']
-                ),401);
+                ),400);
             }
 
             // Generating API key
-            $api_token = $this->generateKey();
+            $api_token = Controller::generateKey();
             //Get input email
             $email = $request->getParam('email');
-            //Get input email
+            //Get input username
             $username = $request->getParam('username');
-            //Get name
+            //Get user full name
             $name = $request->getParam('full_name');
-            //Get phone
+            //Get user phone
             $phone = $request->getParam('phone');
             //Default user group is 2 (member)
             $default_group = 2;
@@ -53,15 +52,15 @@ class AuthController extends Controller {
 
             //Store user data if validate !failed
             $new_user = UsersModel::create([
-                            'email'         => $email,
-                            'username'      => $username,
-                            'password'      => password_hash($request->getParam('password'),
-                                                PASSWORD_BCRYPT, ['cost' => 10]),
-                            'api_token'     => $api_token,
-                            'active'        => $account_status
-                        ]);
+                'email'         => $email,
+                'username'      => $username,
+                'password'      => password_hash($request->getParam('password'),
+                                   PASSWORD_BCRYPT, ['cost' => 10]),
+                'api_token'     => $api_token,
+                'active'        => $account_status
+            ]);
 
-            //Create user group if success create new user
+            //Create user-group if success create new user
             if($new_user){
 
                 //cek user
@@ -73,6 +72,7 @@ class AuthController extends Controller {
                     'group_id'      => $default_group,
 
                 ]);
+                
                 //create user detail
                 UsersDetail::create([
                     'user_id'       => $user->id,
@@ -80,37 +80,43 @@ class AuthController extends Controller {
                     'phone'         => $phone,
                 ]);
 
-                 //Get user group
-                 $user_group = UsersGroup::where('user_id', $user->id)->first();
-                 //Get group by user group
-                 $groups = GroupModel::where('id', $user_group->group_id)->first();
-                 //get user detail
-                 $user_detail = UsersDetail::where('user_id', $user->id)->first();
+                //Get user group by user id
+                $user_group = UsersGroup::where('user_id', $user->id)->first();
+                //Get group name by user group id
+                $groups = GroupModel::where('id', $user_group->group_id)->first();
+                //get user detail
+                $user_detail = UsersDetail::where('user_id', $user->id)->first();
+
+                //send mail
+                $this->mailer->send('email_template.twig', ['user' => $user], 
+                    function($message) use ($user){
+            
+                    $message->to($user->email);
+                    $message->subject("Some App - Welcome Message");
+                
+                });
 
             }
 
-            //Return respon message true if store user !failed
+
+            //Return respon message true, if store user !failed
             return $response->withJson(array(
-                'status' => '201',
+                'status' => 201,
                 'error' => false,
                 'message' => 'success',
                 'user' => [
                     'uid'       => $user->id,
                     'token'     => $user->api_token,
-                    'name'      => $user_detail->full_name,
-                    'username'  => "@".$user->username,
-                    'phone'     => $user_detail->phone,
-                    'email'     => $user->email,
                     'group'     => $groups->name,
                 ]
             ),201);
 
         }catch(\Exception $e){
 
-            //error handle if postSingUp failed to execute
+            //error handle, if postSingUp failed to execute
             return $response->withJson(array(
                 'error' => $e->getMessage()
-            ),401);
+            ),400);
 
         }
 
@@ -120,7 +126,6 @@ class AuthController extends Controller {
     * Login user by email and password
     * @param String $email, $password
     */
-
     public function postSingIn($request, $response){
         //Get input parameter
         $email      = $request->getParam('email');
@@ -132,14 +137,14 @@ class AuthController extends Controller {
             'password'      => V::noWhiteSpace()->notEmpty(),
         ]);
 
-        //cek validation
+        //Check validation
         if($validation->failed()){
             return $response->withJson(array(
                     'errors' => $_SESSION['errors']
-            ),401);
+            ),400);
         }
 
-        //cek user
+        //Check user
         $user = UsersModel::where('email', $email)->first();
 
         //if user and user email failed to fetch
@@ -156,12 +161,9 @@ class AuthController extends Controller {
 
         //decrypt password
         if(password_verify($password, $user->password)){
-            //diperlukan untuk test pada bagian reset password secara lokal
-            //bisa dihapus ketika api di konsumsi dari client
-            $_SESSION['user_id'] = $user->id;
 
-             // Generating new API key
-            $api_token = $this->generateKey();
+            // Generate new API key
+            $api_token = Controller::generateKey();
 
             //Update new token
             $tokens = UsersModel::where('email', $email)->update(
@@ -172,9 +174,9 @@ class AuthController extends Controller {
                 //get new user token
                 $user_main = UsersModel::where('email', $email)->first();
 
-                //Return respon message true if user login !failed
+                //Return respon message true, if user login !failed
                 return $response->withJson(array(
-                    'status'   => 201,
+                    'status'   => 200,
                     'error'    => false,
                     'message'  => 'Login Success',
                     'user' => [
@@ -182,13 +184,13 @@ class AuthController extends Controller {
                         'isActive'  => $user_main->active,
                         'token'     => $user_main->api_token,
                     ]
-                ),201);
+                ),200);
             }
 
 
         }
 
-        //return false if !password
+        //return false, if !password
         return $response->withJson(array(
             'status' => 400,
             'error' => true,
@@ -196,235 +198,5 @@ class AuthController extends Controller {
         ),400);
 
     }
-
-    /**
-    * Change password user
-    * @param String $password old and new
-    */
-    public function postChangePassword($request, $response){
-
-        $uid = $request->getParam('uid');
-        $query = UsersModel::find($uid);
-
-        //validate input
-        $validation =  $this->validator->validate($request, [
-            'password_old'      => V::noWhiteSpace()->notEmpty()
-                                    ->matchesPassword($query->password),
-            'password_new'      => V::noWhiteSpace()->notEmpty(),
-        ]);
-
-        //cek validation
-        if($validation->failed()){
-            return $response->withJson(array(
-                'errors' => $_SESSION['errors']
-            ),401);
-        }
-
-        //access SetPassword function with passing new password
-        $query->setPassword($request->getParam('password_new'));
-
-        //Return respon message true password success changed
-        return $response->withJson(array(
-            'status' => 201,
-            'error' => false,
-            'message' => 'change password success'
-        ),201);
-
-    }
-
-    public function postForgotPassword($request, $response){
-        $email = $request->getParam('email');
-        $query = UsersModel::find($email);
-
-         //validate input
-         $validation =  $this->validator->validate($request, [
-            'email'   => V::noWhiteSpace()->notEmpty()->email(),
-        ]);
-
-        //cek validation
-        if($validation->failed()){
-            return $response->withJson(array(
-                'errors' => $_SESSION['errors']
-            ),401);
-        }
-
-         //Update new code
-        $forgot = UsersModel::where('email', $email)->update([
-            'forgotten_password_code' => $this->generateKey(),
-            'forgotten_password_time' => 1514263510
-        ]);
-
-
-        if($forgot) {
-            //get new user token
-            $user_main = UsersModel::where('email', $email)->first();
-
-            //test function on the last file
-            //$this->sendMail($user_main->email, $user_main->name, $subject, $body);
-
-            //masih sementara proses belum jadi
-            $this->mailer->send('email.twig', ['user' => $user_main], function($message) use ($user_main){
-
-                $link = "http://your-domain/project/a-dash/reset/".$user_main->forgotten_password_code;
-                $subject = "Asmith Api - Forgot password ";
-                $body = "To change your password please click this link below<a href=".$link.">
-                Forgot password link</a>";
-
-                $message->to($user_main->email);
-                $message->subject($subject);
-                $message->body($body);
-
-            });
-
-            //
-            return $response->withJson(array(
-                'status' => 201,
-                'error' => false,
-                'message' => 'Success send email',
-            ),400);
-
-        } else {
-            //return false if !password
-            return $response->withJson(array(
-                'status' => 400,
-                'error' => true,
-                'message' => 'Failed send a email, your email is not in our databases',
-            ),400);
-        }
-
-    }
-
-
-    /**
-    * Fetching user by id and token
-    * @param String $email User email id
-    */
-    public function postUserDetail($request, $response){
-        //get token and uid
-        $uid = $request->getParam('uid');
-        $token = $request->getParam('token');
-
-        //cek database and get user
-        $user_main = UsersModel::where('id', $uid)
-                            ->where('api_token', $token)
-                            ->first();
-
-        //if !user
-        if (isset($user_main)) {
-
-            $user_detail = UsersDetail::where('user_id', $user_main->id)->first();
-            $user_group = UsersGroup::where('user_id', $user_main->id)->first();
-            $groups = GroupModel::where('id', $user_group->group_id)->first();
-
-            //Return respon message true if user login !failed
-            return $response->withJson(array(
-                'status'   => 201,
-                'error'    => false,
-                'message'  => 'Success',
-                'user' => [
-                    'uid'       => $user_main->id,
-                    'token'     => $user_main->api_token,
-                    'name'      => $user_detail->full_name,
-                    'username'  => "@".$user_main->username,
-                    'phone'     => $user_detail->phone,
-                    'email'     => $user_main->email,
-                    'group'     => $groups->name,
-
-                ]
-            ),201);
-
-        } else {
-
-            //Return respon message false if store user failed
-            return $response->withJson(array(
-                'status' => '401',
-                'error' => true,
-                'message' => 'Cannot retrieve user data'
-            ),401);
-
-        }
-
-    }
-
-    /**
-    * Fetching user api key
-    * @param String $user_id user id primary key in user table
-    */
-    public function getTokenById($request, $response) {
-        //get user input
-        $user_id = $request->getAttribute('id');
-
-        //cek dataase and get api token
-        $user = UsersModel::where('id', $user_id)
-                                ->select('api_token')
-                                ->first();
-
-        //cek if !user
-        if (isset($user)) {
-
-            //give response message error false
-            return $response->withJson(array(
-                'status' => '201',
-                'error' => false,
-                'message' => 'Success',
-                'token' => $user->api_token
-            ),201);
-
-        } else {
-
-            //give response message error true
-            return $response->withJson(array(
-                'status' => '401',
-                'error' => true,
-                'message' => 'Cannot retrieve user Token'
-            ),401);
-
-        }
-    }
-
-    /**
-    * Validating user api key
-    * If the api key is there in db, it is a valid key
-    * @param String $api_key user api key
-    * @return boolean
-    */
-    public function isValidToken($request, $response) {
-        //get input
-        $token = $request->getAttribute('token');
-
-        //cek validation api token
-        $user = UsersModel::where('api_token', $token)
-                            ->select('id')
-                            ->first();
-
-        if (isset($user)) {
-            //give response message error false
-            return $response->withJson(array(
-                'status' => '201',
-                'error' => false,
-                'message' => 'API Token is Valid',
-                'uid' => $user->id
-            ),201);
-
-        } else {
-            //give response message error true
-            return $response->withJson(array(
-                'status' => '401',
-                'error' => true,
-                'message' => 'API Token invalid'
-            ),401);
-
-        }
-    }
-
-//===================================== fungsi penunjang =========================
-
-    //Generate random md5 api token
-    private function generateKey() {
-        //return unique md5 random key
-        return md5(uniqid(rand(), true));
-
-    }
-
 
 }

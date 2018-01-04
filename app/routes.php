@@ -2,22 +2,16 @@
 
 /*
 |----------------------------------------------------
-| Sistem Routing biar makin cuantek la urlnya       |
+| Routing sytem                                     |
 |----------------------------------------------------
 */
 
 /*
 |-----------------------------------------------------
-| Bagian tampilin pagenya
+| For html view (home and reset password)            |
 |-----------------------------------------------------
-| pada bagian ini kita nampilin pagenya biar
-| pass user datang enak bisa liat sesuatu walau
-| ini cuma untuk api saja haha
-| disini ada 2 versi memanggil si home ada yang pake
-| controller sama yang langsung get cuma yang di pake
-| saya adalah yang pake controller biar gaul ehh MVC
 |
-| ini versi langsunya tanpa controller
+| Route version without controller (example)
 |
 | $app->get('/', function($request, $response){
 |     Menampilkan twig template
@@ -25,19 +19,19 @@
 | });
 */
 
-    //Versi controllernya
+    //route with controller
     $app->get('/', 'DefaultController:index')->setName('home');
-
+    $app->get('/reset{token}', 'DefaultController:resetPassword')->setName('reset');
 
 /*
 |----------------------------------------------------
-| Bagian Apinya                                     |
+| Api                                               |
 |----------------------------------------------------
 */
 
     //---------------------- Example APIs ------------------------------
 
-        //Api untuk test perumpamaan user
+        //Api for test (ExampleCrud Controller)
         $app->get('/example', 'ExampleCrud:index');
         $app->get('/example/api/v1/datas', 'ExampleCrud:datas'); // get all
         $app->get('/example/api/v1/data/{id}', 'ExampleCrud:data'); // get by id
@@ -50,27 +44,22 @@
 
 /*
 |----------------------------------------------------
-| User Authentication                               |
+| User data and Authentication                      |
 |----------------------------------------------------
-| User Auth APIs
+| Data and Auth
 | Version 1.0
 |
 */
-    //Register
+    //Auth API
     $app->post('/api/v1/auth/signup', 'AuthController:postSingUp');
-    //Login
     $app->post('/api/v1/auth/signin', 'AuthController:postSingIn');
-    //Forgot Password
-    $app->post('/api/v1/user/password/forgot', 'AuthController:postForgotPassword');
-    //Change Password
-    $app->post('/api/v1/user/password/change', 'AuthController:postChangePassword');
-    //User detail
-    $app->post('/api/v1/user/detail', 'AuthController:postUserDetail');
 
-    //get user token by id
-    $app->get('/api/v1/user/token/{id}', 'AuthController:getTokenById');
-    //get validation token
-    $app->get('/api/v1/user/token/validation/{token}', 'AuthController:isValidToken');
+    //User API
+    $app->post('/api/v1/user/detail', 'UserController:postUserDetail');
+    $app->post('/api/v1/user/password/forgot', 'UserController:postForgotPassword');
+    $app->post('/api/v1/user/password/change', 'UserController:postChangePassword');
+    $app->get('/api/v1/user/token/{id}', 'UserController:getTokenById');
+    $app->get('/api/v1/user/token/validation/{token}', 'UserController:isValidToken');
 
     //For Test new method
-    $app->post('/api/test', 'AuthController:getApiKeyById');
+    $app->post('/api/test', 'UserController:getApiKeyById');

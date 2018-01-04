@@ -17,4 +17,12 @@
                 return $this->container->{$property};
             }
         }
+
+        //Generate random md5 keys
+        public function generateKey() {
+            //return unique md5 random key
+            return md5(uniqid(rand(), true));
+
+        }
+
     }

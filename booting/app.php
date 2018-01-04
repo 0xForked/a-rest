@@ -1,29 +1,24 @@
 <?php
-
-    use Respect\Validation\Validator as V;
+    
+    use Respect\Validation\Validator as ValidationRules;
     use PHPMailer\PHPMailer\PHPMailer;
-    //Start session
+
+    //Start session for php session
     session_start();
 
 
 /*
 |----------------------------------------------------
-| Menginisialisasi direktori autoload               |
+| Register The Auto Loader   
 |----------------------------------------------------
-|
-| untuk meload kelas yang ada dalam folder vendor
-|
 */
 
     require __DIR__ . ('/../vendor/autoload.php');
 
 /*
 |----------------------------------------------------
-| Slim Framework                                    |
+| Slim Framework Setting                            |
 |----------------------------------------------------
-|
-| inisialisasi settings untuk framework ini
-|
 */
 
     $app = new \Slim\App([
@@ -46,43 +41,45 @@
 
 /*
 |----------------------------------------------------
-| Bagian Container                                  |
+| App Container                                     |
 |----------------------------------------------------
 */
 
-    //Pangil si container
+    //Container
     $container = $app->getContainer();
 
-    //Setting koneksi Eloquent
+    //Eloquent Setting 
     $capsule =  new \Illuminate\Database\Capsule\Manager;
     $capsule->addConnection($container['settings']['db']);
     $capsule->setAsGlobal();
     $capsule->bootEloquent();
 
-    //Container untuk Eloquent - illuminate database
+    //Container for Eloquent - illuminate ORM database
     $container['db'] = function($container) use ($capsule){
         return $capsule;
     };
 
-    //Container menghandle View dengan Twig
+    //Container for View with Twig as a template
     $container['view'] = function ($container) {
-        //Twig file Folder
+        //Twig Folder
         $view = new \Slim\Views\Twig(
             __DIR__ . '/../resources/view/template/',
             [ 'cache' => false ]
         );
 
-        // Instantiate and add Slim specific extension
+        // Add Slim specific extension
         $basePath = rtrim(str_ireplace('index.php', '',
             $container['request']->getUri()->getBasePath()), '/'
         );
 
+        //Add route extension
         $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 
+        //return view
         return $view;
     };
 
-    //Container menghandle error 404
+    //Container for error 404
     $container['notFoundHandler'] = function ($container){
         return function ($request, $response) use ($container) {
             return $container->view->render($response, 'error_404.twig');
@@ -90,16 +87,19 @@
         };
     };
 
-    //Container untuk Validator
+    //Container for Validator
     $container['validator'] = function ($container) {
         return new \App\Validation\Validator($container);
     };
 
-    //Container untuk mailer masi sementara proses belum jadi sementara pake sendMail di  Auth Controller
+    //Validation Rules
+    ValidationRules::with('App\\Validation\\Rules\\');
+
+    //Container for mailer 
     $container['mailer'] = function ($container) {
         $mailer = new PHPMailer();
 
-        $mailer->SMTPDebug = 3;
+        //$mailer->SMTPDebug = 3;
 
         $mailer->isSMTP();
 
@@ -115,18 +115,18 @@
         $mailer->Host = 'ssl://smtp.gmail.com:465';
 
         $mailer->SMTPAuth = true;
-        $mailer->Username = 'your-email@gmail.com';
-        $mailer->Password = 'your-email-password';
+        $mailer->Username = 'fookipoke@gmail.com';
+        $mailer->Password = 'fookipoke.password';
 
-        $mailer->setFrom('fookipokemail@asmith.my.id', 'FookiPoke Studio');
+        $mailer->setFrom('fookipoke@gmail.com', 'FookiPoke Studio');
 
         $mailer->isHtml(true);
 
-        return new \App\Mail\Mailer($container->view, $mailer);
+        return new \App\Maillers\Mailer($container->view, $mailer);
 
     };
 
-    //Controller
+    //Container for Controller
     $container['DefaultController'] = function ($container) {
         return new \App\Controllers\DefaultController($container);
     };
@@ -139,12 +139,12 @@
         return new \App\Controllers\Auth\AuthController($container);
     };
 
-    //Middleware
+    $container['UserController'] = function ($container) {
+        return new \App\Controllers\User\UserController($container);
+    };
+
+    //Container for Middleware
     $app->add(new \App\Middleware\ValidationErrorsMiddlerware($container));
-
-    //Validation
-    V::with('App\\Validation\\Rules\\');
-
 
 
 /*

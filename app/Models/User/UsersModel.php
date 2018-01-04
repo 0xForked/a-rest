@@ -13,12 +13,4 @@ class UsersModel extends Model  {
         'api_token'
     ];
 
-    public function setPassword($password){
-
-        $this->update([
-            'password' => password_hash($password, PASSWORD_BCRYPT, ['cost' => 10])
-        ]);
-
-    }
-
 }

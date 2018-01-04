@@ -2,15 +2,15 @@
 
 /*
 |-----------------------------------------------------
-| Register si File App dalam Bootstrap
+| Register file app.php
 |-----------------------------------------------------
 */
 
-    require __DIR__ . '/bootstrap/app.php';
+    require_once __DIR__ . '/booting/app.php';
 
 /*
 |-----------------------------------------------------
-| Fungsi Menjalankan si Slim ini
+| Run The Application
 |-----------------------------------------------------
 */
 

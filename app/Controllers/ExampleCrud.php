@@ -11,11 +11,12 @@ class ExampleCrud extends Controller{
         echo '<center><a href="example/api/v1/datas">All data</a>'." - ".
                 '<a href="example/api/v1/data/1">Data by ID</a><center>';
 
-        //Keterangan
-        //getParam berarti #id atau $data atau lainnya
-        //harus diinput pada postman bisa di taruh di bagian body
-        //sedangkan
-        //getAtribut berarti #id harus ada disebalah url misal user/#id
+        //FYI
+        //getParam #id or $data or others it's mean that 
+        //user must give an input
+        //while
+        //getAtribut #id or others that mean you must add id or other in the link for exampel
+        //base_url/api/user/#id
     }
 
     //get all data
