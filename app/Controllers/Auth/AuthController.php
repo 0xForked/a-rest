@@ -90,7 +90,7 @@ class AuthController extends Controller {
                 function($message) use ($user){
 
                 $message->to($user->email);
-            $message->subject("Some App - Welcome Message");
+                $message->subject("Some App - Welcome Message");
 
             });
 

@@ -62,4 +62,4 @@
     $app->get('/api/v1/user/token/validation/{token}', 'UserController:isValidToken');
 
     //For Test new method
-    $app->post('/api/test', 'UserController:getApiKeyById');
+    $app->get('/api/test', 'LocationServiceController:getLocation');

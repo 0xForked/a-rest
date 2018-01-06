@@ -1,29 +1,28 @@
 # A-rest Repo
+REST Service with [Slim Micro Framework](https://www.slimframework.com/)
+
+<p align="center" style="margin-top:50px">
+  <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="500">
+</p>
+<br>
 
 ### Library
 
-1. <a href="https://github.com/illuminate/database">Eloquent</a> - ORM DB
-2. <a href="https://github.com/twigphp/Twig">Twig</a> - Template
-3. <a href="https://github.com/Respect/Validation">Respect Validation</a> - Validation
-4. <a href="https://github.com/PHPMailer/PHPMailer">PHPMailer</a> - Mailler
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="900">
-</p>
-<br>
+1. [Eloquent](https://github.com/illuminate/database) - ORM DB
+2. [Twig](https://github.com/twigphp/Twig) - Template
+3. [Respect Validation](https://github.com/Respect/Validation) - Validation
+4. [PHPMailer](https://github.com/PHPMailer/PHPMailer) - Mailler
 
 ### Config
     Import database
         |--- /database/asmith_rest.sql
-    Database setting
+    App config
         |--- /booting/app.php
+    Email
+        Custom email body
+            |--- /resources/view/email.twig
 
-    Email config
-    Go to booting/app.php and change username and password as yours.
-    if your want to make a custom body you can delete or comment on line 270,
-    in AuthController and your can put your custom body email in folder resources/view/email.twig
-
-### folder dan file
+### Folder dan file
     root |
          |---App |--/Controllers
          |       |       |---/Controller.php
@@ -84,13 +83,23 @@
         4. reset password - base_url/auth/password/reset
                 need  "email" as a parameter and then you will get an email to reset your password
 
-    auth account default admin
-        1. email    :   mail@asmith.my.id
-        2. password :   password
-    auth account default member
-        1. email    :   sidia@asmith.my.id
-        2. password :   password
 
-example implementation on android app with a-rest as a web service :
+### Default account
+
+Group | Email | Password
+------------ |------------ | -------------
+admin | mail@asmith.my.id | password
+member | sidia@asmith.my.id | password
+
+### Example implementation on android app :
 - a-droid base version https://github.com/aasumitro/a-droid
 - a-droid clean version https://github.com/aasumitro/a-droid-cc
+- bajalang (LBS App) https://github.com/aasumitro/bajalang-cc
+
+
+### TODO
+- [ ] Clean up, code style and minor refactor.
+
+
+### License
+Copyright 2017-2018 A. A. Sumitro [LICENSE](https://github.com/aasumitro/a-rest/blob/master/LICENSE)

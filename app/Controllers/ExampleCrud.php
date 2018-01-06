@@ -12,7 +12,7 @@ class ExampleCrud extends Controller{
                 '<a href="example/api/v1/data/1">Data by ID</a><center>';
 
         //FYI
-        //getParam #id or $data or others it's mean that 
+        //getParam #id or $data or others it's mean that
         //user must give an input
         //while
         //getAtribut #id or others that mean you must add id or other in the link for exampel
@@ -52,7 +52,7 @@ class ExampleCrud extends Controller{
         ]);
 
         return $response->withJson(array(
-            'status' => '200',
+            'status' => 200,
             'message' => 'data berhasil ditambah'
         ),200);
 
@@ -78,7 +78,7 @@ class ExampleCrud extends Controller{
         $data = CRUD::where('id', $id)->update(['data' => $data]);
 
         return $response->withJson(array(
-            'status' => '200',
+            'status' => 200,
             'message' => 'data dirubah'
         ),200);
 
@@ -90,7 +90,7 @@ class ExampleCrud extends Controller{
         $id = $request->getAttribute('id');
         $data = CRUD::where('id', $id)->delete();
         return $response->withJson(array(
-            'status' => '200',
+            'status' => 200,
             'message' => 'data ' .$id. ' berhasil di hapus'
         ),200);
 

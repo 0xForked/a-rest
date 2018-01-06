@@ -1,5 +1,5 @@
 <?php
-    
+
     use Respect\Validation\Validator as ValidationRules;
     use PHPMailer\PHPMailer\PHPMailer;
 
@@ -9,7 +9,7 @@
 
 /*
 |----------------------------------------------------
-| Register The Auto Loader   
+| Register The Auto Loader
 |----------------------------------------------------
 */
 
@@ -48,7 +48,7 @@
     //Container
     $container = $app->getContainer();
 
-    //Eloquent Setting 
+    //Eloquent Setting
     $capsule =  new \Illuminate\Database\Capsule\Manager;
     $capsule->addConnection($container['settings']['db']);
     $capsule->setAsGlobal();
@@ -95,7 +95,7 @@
     //Validation Rules
     ValidationRules::with('App\\Validation\\Rules\\');
 
-    //Container for mailer 
+    //Container for mailer
     $container['mailer'] = function ($container) {
         $mailer = new PHPMailer();
 
@@ -141,6 +141,10 @@
 
     $container['UserController'] = function ($container) {
         return new \App\Controllers\User\UserController($container);
+    };
+
+    $container['LocationServiceController'] = function ($container) {
+        return new \App\Controllers\Location\LocationServiceController($container);
     };
 
     //Container for Middleware

@@ -62,7 +62,6 @@ class UserController extends Controller {
 
     }
 
-
  	/**
     * Change password user
     * @param String $uid $token
@@ -71,13 +70,13 @@ class UserController extends Controller {
     	//Get parameter
         $uid = $request->getParam('uid');
         $token = $request->getParam('token');
-        
+
         //cek database and get user
         $user_main = UsersModel::where('id', $uid)
                                 ->where('api_token', $token)
                                 ->firstOrFail();
 
-        //validate input 
+        //validate input
         $validation =  $this->validator->validate($request, [
             'password_old'      => V::noWhiteSpace()->notEmpty()
                                     ->matchesPassword($user_main->password),
@@ -108,7 +107,7 @@ class UserController extends Controller {
                 'message' => 'change password success'
             ),201);
 
-        } 
+        }
 
     }
 
@@ -225,28 +224,31 @@ class UserController extends Controller {
                             ->select('id')
                             ->first();
 
-        if (isset($user)) {
+        /*if (isset($user)) {
             //give response message error false
-            /*return $response->withJson(array(
+            return $response->withJson(array(
                 'status' => '201',
                 'error' => false,
                 'message' => 'API Token is Valid',
                 'uid' => $user->id
-            ),201);*/
+            ),201);
 
-            return true
+            //return "true";
 
         } else {
             //give response message error true
-            /*return $response->withJson(array(
+            return $response->withJson(array(
                 'status' => '401',
                 'error' => true,
                 'message' => 'API Token invalid'
-            ),401);*/
+            ),401);
 
-            return false
+            //return "false";
 
-        }
+        }*/
+
+        return isset($user);
+
     }
 
 }
