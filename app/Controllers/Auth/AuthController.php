@@ -64,7 +64,7 @@ class AuthController extends Controller {
             //cek user
             $user = UsersModel::where('email', $email)->first();
 
-            //create defaul group for new user
+            //create default group for new user
             UsersGroup::create([
                 'user_id'       => $user->id,
                 'group_id'      => $default_group,

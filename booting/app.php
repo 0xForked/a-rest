@@ -39,14 +39,14 @@
     ]);
 
 
+    //Add Container
+    $container = $app->getContainer();
+
 /*
 |----------------------------------------------------
-| App Container                                     |
+| Eloquent                                          |
 |----------------------------------------------------
 */
-
-    //Container
-    $container = $app->getContainer();
 
     //Eloquent Setting
     $capsule =  new \Illuminate\Database\Capsule\Manager;
@@ -54,14 +54,14 @@
     $capsule->setAsGlobal();
     $capsule->bootEloquent();
 
-    //Container for Eloquent - illuminate ORM database
-    $container['db'] = function($container) use ($capsule){
-        return $capsule;
-    };
+/*
+|----------------------------------------------------
+|  View                                             |
+|----------------------------------------------------
+*/
 
-    //Container for View with Twig as a template
     $container['view'] = function ($container) {
-        //Twig Folder
+        //Template Folder
         $view = new \Slim\Views\Twig(
             __DIR__ . '/../resources/view/template/',
             [ 'cache' => false ]
@@ -87,7 +87,12 @@
         };
     };
 
-    //Container for Validator
+/*
+|----------------------------------------------------
+|  Validator                                        |
+|----------------------------------------------------
+*/
+
     $container['validator'] = function ($container) {
         return new \App\Validation\Validator($container);
     };
@@ -95,7 +100,12 @@
     //Validation Rules
     ValidationRules::with('App\\Validation\\Rules\\');
 
-    //Container for mailer
+/*
+|----------------------------------------------------
+|  Mailer                                           |
+|----------------------------------------------------
+*/
+
     $container['mailer'] = function ($container) {
         $mailer = new PHPMailer();
 
@@ -126,7 +136,12 @@
 
     };
 
-    //Container for Controller
+/*
+|----------------------------------------------------
+|  Controller                                       |
+|----------------------------------------------------
+*/
+
     $container['DefaultController'] = function ($container) {
         return new \App\Controllers\DefaultController($container);
     };
@@ -147,7 +162,13 @@
         return new \App\Controllers\Location\LocationServiceController($container);
     };
 
-    //Container for Middleware
+
+/*
+|----------------------------------------------------
+|  Middleware                                       |
+|----------------------------------------------------
+*/
+
     $app->add(new \App\Middleware\ValidationErrorsMiddlerware($container));
 
 

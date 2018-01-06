@@ -44,7 +44,7 @@
 
 /*
 |----------------------------------------------------
-| User data and Authentication                      |
+| User data and authentication                      |
 |----------------------------------------------------
 | Data and Auth
 | Version 1.0
@@ -59,7 +59,6 @@
     $app->post('/api/v1/user/password/forgot', 'UserController:postForgotPassword');
     $app->post('/api/v1/user/password/change', 'UserController:postChangePassword');
     $app->get('/api/v1/user/token/{id}', 'UserController:getTokenById');
-    $app->get('/api/v1/user/token/validation/{token}', 'UserController:isValidToken');
 
     //For Test new method
-    $app->get('/api/test', 'LocationServiceController:getLocation');
+    $app->get('/api/test', 'UserController:cekToken');

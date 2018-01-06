@@ -55,7 +55,7 @@ class UserController extends Controller {
             return $response->withJson(array(
                 'status' => 400,
                 'error' => true,
-                'message' => 'Cannot retrieve user data user token or user id wrong'
+                'message' => 'Cannot retrieve user data user token or user id is wrong'
             ),400);
 
         }
@@ -104,7 +104,7 @@ class UserController extends Controller {
             return $response->withJson(array(
                 'status' => 201,
                 'error' => false,
-                'message' => 'change password success'
+                'message' => 'Change password success'
             ),201);
 
         }
@@ -131,7 +131,7 @@ class UserController extends Controller {
             ),400);
         }
 
-         //Update new code
+        //Update new code
         $forgot = UsersModel::where('email', $email)->update([
             'forgotten_password_code' => Controller::generateKey(),
             'forgotten_password_time' => time()
@@ -139,7 +139,7 @@ class UserController extends Controller {
 
 
         if($forgot) {
-            //get new user token
+
             $user_main = UsersModel::where('email', $email)->first();
 
             //send mail
@@ -164,7 +164,7 @@ class UserController extends Controller {
             ),201);
 
         } else {
-            //return false if !password
+            //Error response
             return $response->withJson(array(
                 'status' => 400,
                 'error' => true,
@@ -182,7 +182,7 @@ class UserController extends Controller {
         //get user input
         $user_id = $request->getAttribute('id');
 
-        //cek dataase and get api token
+        //cek database and get api token
         $user = UsersModel::where('id', $user_id)
                                 ->select('api_token')
                                 ->first();
@@ -215,37 +215,12 @@ class UserController extends Controller {
     * @param String $api_token user api token
     * @return boolean
     */
-    public function isValidToken($request, $response) {
+    private function isValidToken($token) {
         //get input
-        $token = $request->getAttribute('token');
+        //$token = $request->getAttribute('token');
 
         //cek validation api token
-        $user = UsersModel::where('api_token', $token)
-                            ->select('id')
-                            ->first();
-
-        /*if (isset($user)) {
-            //give response message error false
-            return $response->withJson(array(
-                'status' => '201',
-                'error' => false,
-                'message' => 'API Token is Valid',
-                'uid' => $user->id
-            ),201);
-
-            //return "true";
-
-        } else {
-            //give response message error true
-            return $response->withJson(array(
-                'status' => '401',
-                'error' => true,
-                'message' => 'API Token invalid'
-            ),401);
-
-            //return "false";
-
-        }*/
+        $user = UsersModel::where('api_token', $token)->first();
 
         return isset($user);
 
