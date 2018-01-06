@@ -2,7 +2,8 @@
 REST Service with [Slim Micro Framework](https://www.slimframework.com/)
 
 <p align="center" style="margin-top:50px">
-  <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="500">
+  <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/test.png" width="300">
+  <img src="https://raw.githubusercontent.com/aasumitro/a-rest/master/resources/assets/images/database.png" width="300">
 </p>
 <br>
 
@@ -98,6 +99,10 @@ member | sidia@asmith.my.id | password
 
 
 ### TODO
+- [X] Example Crud.
+- [X] Example User Auth.
+- [ ] Example LBS.
+- [ ] Example E-commerce.
 - [ ] Clean up, code style and minor refactor.
 
 
