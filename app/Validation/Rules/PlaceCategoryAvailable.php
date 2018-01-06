@@ -7,7 +7,7 @@
     class PlaceCategoryAvailable extends AbstractRule {
 
         public function __construct(){
-            return true;
+            return "Place Category Rules";
          }
 
         public function validate($input) {

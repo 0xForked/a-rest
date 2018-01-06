@@ -7,7 +7,7 @@
     class CityAvailable extends AbstractRule {
 
         public function __construct(){
-           return true;
+           return "City Rules";
         }
 
         public function validate($input) {

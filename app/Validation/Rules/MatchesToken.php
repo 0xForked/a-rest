@@ -7,7 +7,7 @@
     class MatchesToken extends AbstractRule {
 
         public function __construct(){
-            return true;
+            return "Matches Token Rules";
          }
 
         public function validate($input) {
