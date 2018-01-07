@@ -12,7 +12,7 @@
 
         public function validate($input) {
 
-            return PlaceCategory::where('category_name', $input)->count() === 1;
+            return PlaceCategory::where('category_name', $input)->count() !== 0;
 
         }
 

@@ -12,7 +12,7 @@
 
         public function validate($input) {
 
-            return UsersModel::where('api_token', $input)->count() === 1;
+            return UsersModel::where('api_token', $input)->count() !== 0;
 
         }
 

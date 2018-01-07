@@ -12,7 +12,7 @@
 
         public function validate($input) {
 
-            return LocationCity::where('name', $input)->count() === 1;
+            return LocationCity::where('name', $input)->count() !== 0;
 
         }
 

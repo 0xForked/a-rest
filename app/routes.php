@@ -61,4 +61,4 @@
     $app->get('/api/v1/user/token/{id}', 'UserController:getTokenById');
 
     //For Test new method
-    $app->post('/api/test', 'LocationServiceController:getPlaceDetail');
+    $app->post('/api/test', 'LocationServiceController:getPlaceByCategory');
