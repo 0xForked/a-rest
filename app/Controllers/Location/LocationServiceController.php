@@ -74,8 +74,8 @@ class LocationServiceController extends Controller {
      */
     public function getPlaceByCategory($request, $response) {
 
-        $city = $request->getParam('city');
-        $category = $request->getParam('category');
+         $city = $request->getParam('city');
+         $category = $request->getParam('category');
 
         //validation
         $validation =  $this->validator->validate($request, [
@@ -100,8 +100,7 @@ class LocationServiceController extends Controller {
                             ->where('location_id', $location)
                             ->get();
 
-
-            return $place->toJson();
+            return $response->withJson($place, 200);
 
         }
 

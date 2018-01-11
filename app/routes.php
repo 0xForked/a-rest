@@ -44,21 +44,26 @@
 
 /*
 |----------------------------------------------------
-| User data and authentication                      |
+| Rest API Routes                                   |
 |----------------------------------------------------
-| Data and Auth
+| Rest Routes
 | Version 1.0
 |
 */
     //Auth API
-    $app->post('/api/v1/auth/signup', 'AuthController:postSingUp');
-    $app->post('/api/v1/auth/signin', 'AuthController:postSingIn');
+    $app->post('/v1.0/user/auth/signup', 'UserAuthController:postSingUp');
+    $app->post('/v1.0/user/auth/signin', 'UserAuthController:postSingIn');
 
     //User API
-    $app->post('/api/v1/user/detail', 'UserController:postUserDetail');
-    $app->post('/api/v1/user/password/forgot', 'UserController:postForgotPassword');
-    $app->post('/api/v1/user/password/change', 'UserController:postChangePassword');
-    $app->get('/api/v1/user/token/{id}', 'UserController:getTokenById');
+    $app->post('/v1.0/user/data/detail', 'UserDataController:postUserDetail');
+    $app->post('/v1.0/user/data/password/forgot', 'UserDataController:postForgotPassword');
+    $app->post('/v1.0/user/data/password/change', 'UserDataController:postChangePassword');
+    $app->get('/v1.0/user/data/token/{id}', 'UserDataController:getTokenById');
+
+    //Location
+    $app->get('/v1.0/place/location/list', 'LocationServiceController:getPlaceByCategory');
+    $app->get('/v1.0/place/location/detail', 'LocationServiceController:getPlaceDetail');
 
     //For Test new method
     $app->post('/api/test', 'LocationServiceController:getPlaceByCategory');
+

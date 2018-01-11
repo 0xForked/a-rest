@@ -9,7 +9,7 @@ use App\Models\User\GroupModel;
 use Respect\Validation\Validator as V;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class UserController extends Controller {
+class UserDataController extends Controller {
 
  	/**
     * Fetching user data by id and token
@@ -74,7 +74,7 @@ class UserController extends Controller {
         //cek database and get user
         $user_main = UsersModel::where('id', $uid)
                                 ->where('api_token', $token)
-                                ->firstOrFail();
+                                ->first();
 
         //validate input
         $validation =  $this->validator->validate($request, [

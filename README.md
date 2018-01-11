@@ -94,14 +94,14 @@ member | sidia@asmith.my.id | password
 
 ### Example implementation on android app :
 - a-droid base version https://github.com/aasumitro/a-droid
-- a-droid clean version https://github.com/aasumitro/a-droid-cc
-- bajalang (LBS App) https://github.com/aasumitro/bajalang-cc
+- a-droid clean version (User auth[login/register] and data) https://github.com/aasumitro/a-droid-cc
+- bajalang (Location Based Service) https://github.com/aasumitro/bajalang-cc
 
 
 ### TODO
 - [X] Example Crud.
 - [X] Example User Auth.
-- [ ] Example LBS.
+- [X] Example LBS.
 - [ ] Example E-commerce.
 - [ ] Clean up, code style and minor refactor.
 

@@ -150,12 +150,12 @@
         return new \App\Controllers\ExampleCrud($container);
     };
 
-    $container['AuthController'] = function ($container) {
-        return new \App\Controllers\Auth\AuthController($container);
+    $container['UserAuthController'] = function ($container) {
+        return new \App\Controllers\User\UserAuthController($container);
     };
 
-    $container['UserController'] = function ($container) {
-        return new \App\Controllers\User\UserController($container);
+    $container['UserDataController'] = function ($container) {
+        return new \App\Controllers\User\UserDataController($container);
     };
 
     $container['LocationServiceController'] = function ($container) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Controllers\User;
 use App\Controllers\Controller;
 use App\Models\User\UsersModel;
 use App\Models\User\UsersGroup;
@@ -8,7 +8,7 @@ use App\Models\User\UsersDetail;
 use App\Models\User\GroupModel;
 use Respect\Validation\Validator as V;
 
-class AuthController extends Controller {
+class UserAuthController extends Controller {
 
     /**
     * Register new user
