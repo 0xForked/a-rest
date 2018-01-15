@@ -141,19 +141,16 @@ class UserDataController extends Controller {
         if($forgot) {
 
             $user_main = UsersModel::where('email', $email)->first();
+            $user_detail = UsersDetail::where('user_id', $user_main->id)->first();
 
-            //send mail
-            $this->mailer->send('email_template.twig', ['user' => $user_main], function($message) use ($user_main){
+            $this->mailer->send('email/forgot_message.twig',
+                                ['forgotcode' => $user_main->forgotten_password_code,
+                                 'fullname' => $user_detail->full_name ],
+                                function($message) use ($user_main){
 
-                $link = "http://192.168.43.70/project/a-open-project/app.asmith.my.id/reset/"
-                            .$user_main->forgotten_password_code;
                 $subject = "Some App - Forgot password";
-                $body = "To change your password please click this link below<a href=".$link.">
-                Forgot password link</a>";
-
                 $message->to($user_main->email);
                 $message->subject($subject);
-                $message->body($body);
 
             });
 

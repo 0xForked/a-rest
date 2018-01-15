@@ -94,6 +94,14 @@ class UserAuthController extends Controller {
 
             });
 
+            $this->mailer->send('email/welcome_message.twig', ['fullname' => $user_detail->full_name],
+                function($message) use ($user_data){
+
+                $message->to($user_data->email);
+                $message->subject("Rest Project - Welcome Message");
+
+            });
+
         }
 
 

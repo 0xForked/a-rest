@@ -18,23 +18,20 @@ REST Service with [Slim Micro Framework](https://www.slimframework.com/)
     Import database
         |--- /database/asmith_rest.sql
     App config
-        |--- /booting/app.php
+        |--- /app/config/settings.php
+        |--- /app/config/dependencies.php
     Email
         Custom email body
-            |--- /resources/view/email.twig
+            |--- /resources/view/email/template.twig
 
-### Folder dan file
+### Folder and file
     root |
-         |---App |--/Controllers
-         |       |       |---/Controller.php
+         |---App |--/Config
+         |       |--/Controllers
          |       |--/Mailer
-         |       |       |---/Mailer.php
          |       |--/Middleware
-         |       |       |---/Middleware.php
          |       |--/Models
-         |       |       |---/Model.php
          |       |--/Validation
-         |       |       |---/Validator.php
          |       |
          |       |-------routes.php
          |

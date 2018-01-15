@@ -1,6 +1,6 @@
 <?php
 
-    namespace App\Maillers;
+    namespace App\Mailers;
 
     class Message {
 
