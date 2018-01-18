@@ -117,6 +117,10 @@ use PHPMailer\PHPMailer\PHPMailer;
         return new \App\Controllers\User\UserDataController($container);
     };
 
+    $container['LocationServiceController'] = function ($container) {
+        return new \App\Controllers\Location\LocationServiceController($container);
+    };
+
 
 /*
 |----------------------------------------------------
